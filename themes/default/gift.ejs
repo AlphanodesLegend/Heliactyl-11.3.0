@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./components/head') %>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%- include('./components/sidebar') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        <%- include('./components/topnav') %>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <% if (req.query.err) { %>
+              <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <% if (req.query.err == "MISSINGID") { %>
+                    You have not provided the Discord user ID.
+                <% } else if (req.query.err == "INVALIDID") { %>
+                    You have provided a Discord user ID that does not exist, or has not signed up on the dashboard.
+                <% } else if (req.query.err == "RAMSIZE") { %>
+                    The RAM number cannot be less than 100 and must be above 999999999999999.
+                <% } else if (req.query.err == "TOMUCHRAM") { %>
+                    You are gifting more RAM then you can gift!
+                <% } else if (req.query.err == "DISKSIZE") { %>
+                    The disk number cannot be less than 100 and must be above 999999999999999.
+                <% } else if (req.query.err == "TOMUCHDISK") { %>
+                    You are gifting more disk then you can gift!
+                <% } else if (req.query.err == "CPUSIZE") { %>
+                    The CPU number cannot be less than 10 and must be above 999999999999999.
+                <% } else if (req.query.err == "TOMUCHCPU") { %>
+                    You are gifting more CPU then you can gift!
+                <% } else if (req.query.err == "SERVERSIZE") { %>
+                    The servers number cannot be less than 1 and must be above 999999999999999.
+                <% } else if (req.query.err == "TOMUCHSERVERS") { %>
+                    You are gifting more servers then you can gift!
+                <% } %>
+              </div>
+            <% } else if (req.query.err == "none") { %>
+              <div class="alert" style="background-color: #00d415;">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                Success!
+              </div>
+            <% } %>
+            <div class="page-header">
+              <h3 class="page-title"> Gift Resources </h3>
+            </div>
+                   <%- include('./components/ads') %>
+            <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <form class="forms-sample">
+                      <div class="form-group">
+                        <label for="InputID">Discord ID</label>
+                        <input type="number" class="form-control" id="InputID" placeholder="Enter ID here">
+                      </div>
+                      <div class="form-group">
+                        <label for="InputCPU">CPU</label>
+                        <input type="number" class="form-control" id="InputCPU" placeholder="10">
+                      </div>
+                      <div class="form-group">
+                        <label for="InputRAM">RAM</label>
+                        <input type="number" class="form-control" id="InputRAM" placeholder="100">
+                      </div>
+                      <div class="form-group">
+                        <label for="InputDisk">Disk</label>
+                        <input type="number" class="form-control" id="InputDisk" placeholder="100">
+                      </div>
+                      <div class="form-group">
+                        <label for="InputDisk">Servers</label>
+                        <input type="number" class="form-control" id="InputServers" placeholder="2">
+                      </div>
+                     <a role="button" class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" href="javascript: submitGift()">Gift</a>
+                      <br>
+                      <p>The gift exploit is patched in this version of Heliactyl, there is no need to worry (:</p>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <%- include('./components/footer') %>
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- Plugin js for this page -->
+    <script src="/assets/vendors/select2/select2.min.js"></script>
+    <script src="/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+    <script>
+      async function submitGift() {
+        let id = encodeURIComponent(document.getElementById("InputID").value);
+        let ram = encodeURIComponent(document.getElementById("InputRAM").value);
+        let disk = encodeURIComponent(document.getElementById("InputDisk").value);
+        let cpu = encodeURIComponent(document.getElementById("InputCPU").value);
+        let servers = encodeURIComponent(document.getElementById("InputServers").value);
+        document.location.href = `/giftres?id=${id}&ram=${ram}&disk=${disk}&cpu=${cpu}&servers=${servers}`;
+      };
+    </script>
+    <!-- End plugin js for this page -->
+    <!-- inject:js -->
+    <%- include('./components/scripts') %>
+    <!-- endinject -->
+    <!-- Custom js for this page -->
+    <script src="/assets/js/file-upload.js"></script>
+    <script src="/assets/js/typeahead.js"></script>
+    <script src="/assets/js/select2.js"></script>
+    <!-- End custom js for this page -->
+  </body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./components/head') %>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%- include('./components/sidebar') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        <%- include('./components/topnav') %>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <% if (req.session.newaccount || req.session.password) { %>
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <% if (req.session.newaccount) { %>
+                    A new account has been created for you on the Pterodactyl Panel.<br>
+                <% } %>
+                <% if (req.session.password) { %>
+                    Your <% if (!req.session.newaccount) { %>new <% } %>password is <%= req.session.password %> ! Make sure to keep this password in a safe place.
+                <% } else { %>
+                    Please check your email to set your password.
+                <% } %>
+            </div>
+        <% } %>
+            <div class="page-header">
+              <h3 class="page-title"> Settings </h3>
+            </div>
+        <%- include('./components/ads') %>
+            <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <form class="forms-sample">
+              	      <div class="form-group">
+                        <label for="exampleInputUsername1">Email</label>
+                        <input type="email" class="form-control" style="color: #9e9e9e;" value="<%= pterodactyl.email %>" placeholder="<%= pterodactyl.email %>" disabled>
+                      </div>
+                      <div class="form-group">
+                        <label for="exampleInputUsername1">Username</label>
+                        <input type="text" class="form-control" style="color: #9e9e9e;" value="<%= pterodactyl.username %>" placeholder="<%= pterodactyl.username %>" disabled>
+                      </div>
+              		  <a role="button" class="btn btn-primary btn-fw" href="/regen">Regenerate Password</a><br><br>
+              		  <a role="button" class="btn btn-primary btn-light" href="/updateinfo">Refresh Account Info</a>
+              		  <br><br><br><br>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <%- include('./components/footer') %>
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/assets/vendors/select2/select2.min.js"></script>
+    <script src="/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+    <!-- End plugin js for this page -->
+    <%- include('./components/scripts') %>
+    <!-- Custom js for this page -->
+    <script src="/assets/js/file-upload.js"></script>
+    <script src="/assets/js/typeahead.js"></script>
+    <script src="/assets/js/select2.js"></script>
+    <!-- End custom js for this page -->
+  </body>
+</html>

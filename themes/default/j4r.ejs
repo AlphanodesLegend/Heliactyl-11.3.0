@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./components/head') %>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%- include('./components/sidebar') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        <%- include('./components/topnav') %>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <div class="page-header">
+              <h3 class="page-title"> Join for resources </h3>
+            </div>
+        <%- include('./components/ads') %>
+            <div class="row">
+              <% for (let i = 0, len = settings.api.client.j4r.j4rads.length; i < len; i++) { %>
+                <div class="col-md-6 grid-margin stretch-card">
+                  <div class="card">
+                    <div class="card-body">
+                      <h4 class="card-title"><%= settings.api.client.j4r.j4rads[i].name %></h4>
+                      <p class="card-description"> Join this server to receive: <br> <%= settings.api.client.j4r.every.cpu %>% CPU, <%= settings.api.client.j4r.every.ram %>MB RAM & <%= settings.api.client.j4r.every.disk / 1024 %>GB Disk </p>
+                      <form class="forms-sample">
+                        <a role="button" class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" href="<%= settings.api.client.j4r.j4rads[i].invite %>">Join Server</a>
+                        <br><br>
+                        <p>Heliactyl needs to check if you actually joined the server so you'll have to logout and login again, <a style="color: #009425" href="../logout">click here</a> to logout</p>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              <% } %>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <%- include('./components/footer') %>
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- plugins:js -->
+    <!-- endinject -->
+    <!-- Plugin js for this page -->
+    <script src="/assets/vendors/select2/select2.min.js"></script>
+    <script src="/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+    <!-- End plugin js for this page -->
+    <%- include('./components/scripts') %>
+    <!-- Custom js for this page -->
+    <script src="/assets/js/file-upload.js"></script>
+    <script src="/assets/js/typeahead.js"></script>
+    <script src="/assets/js/select2.js"></script>
+    <!-- End custom js for this page -->
+  </body>
+</html>

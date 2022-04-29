@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./components/head') %>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%- include('./components/sidebar') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        <%- include('./components/topnav') %>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+
+            <%- include('./components/alert') %>
+            <% if (req.query.err == "ALREADY_OPEN") { %>
+                <div class="alert">
+                	<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                	You can't open multiple tabs!
+            	</div>
+            <% } %>
+            <% if (req.session.newaccount || req.session.password) { %>
+            <div class="alert">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <% if (req.session.newaccount) { %>
+                    Heliactyl successfully created a new account for you.<br>
+                <% } %>
+                <% if (req.session.password) { %>
+                    Your <% if (!req.session.newaccount) { %>new <% } %>password is <%= req.session.password %>! Make sure to keep this password in a safe place.
+                <% } else { %>
+                    Please head over to Settings to create a password.
+                <% } %>
+            </div>
+        <% } %>
+        <%- include('./components/ads') %>
+        <%- include('./components/status') %>
+            <div class="row ">
+              <div class="col-12 grid-margin">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Your Servers</h4>
+                    <div class="table-responsive">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th> Server Name </th>
+                            <th> CPU </th>
+                            <th> RAM </th>
+                            <th> Disk </th>
+                            <th> Options </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% if (pterodactyl.relationships.servers.data.length == 0) { %>
+                              <tr>
+                              <td> No servers found. </td>
+                              </tr>
+                            <% } else { %>
+                              <% for (let i = 0, len = pterodactyl.relationships.servers.data.length; i < len; i++) { %>
+                                <tr>
+                                <td>
+                                  <span class="pl-2"><%= pterodactyl.relationships.servers.data[i].attributes.name.length > 40 ? pterodactyl.relationships.servers.data[i].attributes.name.slice(0, 40) + "..." : pterodactyl.relationships.servers.data[i].attributes.name %></span>
+                                </td>
+                                <td> <%= pterodactyl.relationships.servers.data[i].attributes.limits.cpu %>% </td>
+                                <td> <%= pterodactyl.relationships.servers.data[i].attributes.limits.memory %>MB </td>
+                                <td> <%= pterodactyl.relationships.servers.data[i].attributes.limits.disk %>MB </td>
+                                <td>
+                                <a role="button" class="btn btn-primary" href="/servers/edit?id=<%= pterodactyl.relationships.servers.data[i].attributes.id %>">Edit</a>
+                                <a role="button" class="btn btn-danger" onclick="if (confirm('Please confirm you want to delete this server, the data cannot be retrieved after it has been deleted.')) { window.location.href='/delete?id=<%= pterodactyl.relationships.servers.data[i].attributes.id %>' }">Delete</a>
+                                <% if (settings.api.client.allow.renewsuspendsystem.enabled) { %>
+                                <a role="button" class="btn btn-info" href="/renew?id=<%= pterodactyl.relationships.servers.data[i].attributes.id %>">Renew</a>
+                                <% } %>
+                                <a role="button" class="btn btn-warning" href="<%= settings.pterodactyl.domain %>/server/<%= pterodactyl.relationships.servers.data[i].attributes.identifier %>">Link</a>
+                                </td>
+                                </tr>
+                              <% } %>
+                            <% } %>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <%- include('./components/footer') %>
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <%- include('./components/scripts') %>
+  </body>
+</html>

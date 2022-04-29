@@ -1,0 +1,239 @@
+{
+  "version": "11.4.3",
+  "defaulttheme": "default",
+  "website": {
+    "port": 80,
+    "warning": "To run Heliactyl on a domain, you need to setup a reverse proxy, the guide is on our GitHub",
+    "secret": "Example Secret"
+  },
+  "pterodactyl": {
+    "domain": "Panel URL, example: https://dev.heliactyl.xyz",
+    "note": "Don't put a / in the domain, only put for example https://panel.heliactyl.xyz or server link wont work",
+    "key": "api key with all read and writes"
+  },
+  "limits": {
+    "note": "This allows you to control the maximum amount of resources anyone can buy from the resources store.",
+    "ram":1024,
+    "cpu":200,
+    "servers":4,
+    "disk":5120
+  },
+  "ads": {
+    "enabled": false,
+    "script": "Add your adsense etc here.",
+    "note": "This allows you to put adsense, adsterra, etc easily into Heliactyl."
+  },
+  "database": "sqlite://database.sqlite",
+  "api": {
+    "client": {
+       "api": {
+         "enabled": false,
+         "code": "Example API Code"
+       },
+       "j4r": {
+         "enabled": true,
+         "servers": ["example", "example"],
+         "every": {
+             "cpu": 10,
+             "ram": 512,
+             "disk": 512,
+             "servers": 0
+         },
+         "j4rads": [
+             {
+             	"name": "Example server",
+                "invite": "https://discord.gg/Tz2bkhk5Pn"
+         	 },
+             {
+                 "name": "Example server",
+                 "invite": "https://discord.gg/vSm7FGUXRf"
+         	 }
+         ]
+       },
+       "bot": {
+         "token": "Discord Bot Token",
+         "joinguild": {
+           "_comment": "The Discord bot must be in these servers and have invite permissions.",
+           "enabled": false,
+           "guildid": ["example"]
+        }
+      },
+      "webhook": {
+        "_comment": "URL of the webhook to send messages to.",
+        "webhook_url": "",
+        "auditlogs": {
+          "_comment": "This feature allows you to log actions, and get an overview of a users actions (only works if done with dashactyl, not ptero)",
+          "enabled": false,
+          "_comment2": "The types of notifications disabled. Values: ADMIN, LOGIN, SERVER, COUPONREDEEM",
+          "disabled": []
+        }
+      },
+      "passwordgenerator": {
+        "signup": true,
+        "note": "Use this to disable signups",
+        "length": 16
+      },
+      "allow": {
+        "newusers": true,
+        "regen": true,
+        "server": {
+          "create": true,
+          "modify": true,
+          "delete": true
+        },
+        "overresourcessuspend": false,
+        "renewsuspendsystem": {
+          "_comment": "This feature requires a restart in order to work. Also, this requires every server to start suspended, or else this feature would not work for some servers.",
+          "enabled": false,
+          "time": 3600,
+          "cost": 0
+        }
+      },
+      "oauth2": {
+        "_comment": "Go to https://discord.dev/ and create an application to set these up.",
+        "id": "id of the application",
+        "secret": "secret of the application",
+        "link": "link of website wihtout /callback",
+        "callbackpath": "/callback",
+        "prompt": true,
+
+        "ip": {
+          "trust x-forwarded-for": true,
+          "block": [],
+
+          "_comment": "'duplicate check' is an anti-alt check by IPs.",
+          "duplicate check": false,
+
+          "_comment2": "'cookie alt check' is an anti-alt check by cookies.",
+          "cookie alt check": true
+        }
+      },
+      "ratelimits": {
+        "enabled": true,
+
+        "trust x-forwarded-for": true,
+
+        "requests": 30,
+        "per second": 60
+      },
+      "packages": {
+        "default": "default",
+        "list": {
+          "default": {
+            "ram": 1024,
+            "disk": 1024,
+            "cpu": 100,
+            "servers": 1
+          }
+        }
+      },
+      "locations": {
+        "1": {
+          "name": "Example Location 1",
+
+          "_comment": "Make 'package' be null to allow anyone with enough resources in their plan to create a server with this location. Also, make the 'package' variable an array, like [], with the location names with quotes to make a user be required to have a plan in order to use the package.",
+          "package": null
+        },
+        "2": {
+          "name": "Example Location 2",
+
+          "_comment": "Make 'package' be null to allow anyone with enough resources in their plan to create a server with this location. Also, make the 'package' variable an array, like [], with the location names with quotes to make a user be required to have a plan in order to use the package.",
+          "package": null
+        }
+      },
+      "eggs": {
+       "paper": {
+          "display": "Minecraft Java",
+          "minimum": {
+            "ram": 1024,
+            "disk": 1024,
+            "cpu": 100
+          },
+          "maximum": {
+            "ram": null,
+            "disk": null,
+            "cpu": null
+          },
+          "info": {
+            "egg": 3,
+            "docker_image": "ghcr.io/pterodactyl/yolks:java_17",
+            "startup": "java -Xms128M -Xmx{{SERVER_MEMORY}}M -Dterminal.jline=false -Dterminal.ansi=true -jar {{SERVER_JARFILE}}",
+            "environment": {
+              "SERVER_JARFILE": "server.jar",
+              "BUILD_NUMBER": "latest"
+            },
+            "feature_limits": {
+              "databases": 4,
+              "backups": 4
+            }
+          }
+        },
+        "bungeecord": {
+          "display": "Minecraft BungeeCord",
+          "minimum": {
+            "ram": 512,
+            "disk": 512,
+            "cpu": 75
+          },
+          "maximum": {
+            "ram": null,
+            "disk": null,
+            "cpu": null
+          },
+          "info": {
+            "egg": 1,
+            "docker_image": "ghcr.io/pterodactyl/yolks:java_17",
+            "startup": "java -Xms128M -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}",
+            "environment": {
+              "SERVER_JARFILE": "bungeecord.jar",
+              "BUNGEE_VERSION": "latest"
+            },
+            "feature_limits": {
+              "databases": 4,
+              "backups": 4
+            }
+          }
+        }
+      },
+      "coins": {
+        "enabled": false,
+        "store": {
+          "_comment": "The cost and per is not intended to used with 0. This is not intended to sell resources for coins. Make sure coins are enabled too, or else there can be errors.",
+          "enabled": false,
+          "ram": {
+            "cost": 100,
+            "per": 1
+          },
+          "disk": {
+            "cost": 100,
+            "per": 1
+          },
+          "cpu": {
+            "cost": 100,
+            "per": 1
+          },
+          "servers": {
+            "cost": 100,
+            "per": 1
+          }
+        }
+      }
+    },
+    "arcio": {	
+      "_comment": "You can make an arc.io widget on https://arc.io. You can get money using arc.io.",	
+      "enabled": false,	
+      "widgetid": "This usually a 6 digit ID that you can find on Arc Installation page",	
+      "afk page": {	
+        "_comment": "This will not effect any current arc.io sessions, and will require a restart to kick everyone out of the websocket sesison.",	
+        "_comment2": "Make sure coins are enabled if you choose to enable this option!",	
+        "enabled": false,	
+        "_comment3": "If you change the path, you need to restart for it to take full effect.",	
+        "path": "afkwspath",	
+        "_comment4": "This afk page will give the users [coins variable] coins every [every variable] seconds.",	
+        "every": 60,	
+        "_comment5": "The coins variable is meant to not be under 1. There may be bugs if the coins variable is less than 1.",	
+        "coins": 1
+      }	
+    }
+  }
+}

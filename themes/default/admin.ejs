@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./components/head') %>
+  <body>
+    <div class="container-scroller">
+      <!-- partial:partials/_sidebar.html -->
+      <%- include('./components/sidebar') %>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+        <!-- partial:partials/_navbar.html -->
+        <%- include('./components/topnav') %>
+        <!-- partial -->
+        <div class="main-panel">
+          <div class="content-wrapper">
+            <% if (req.query.err) { %>
+              <% if (req.query.err !== "none") { %>
+               <br>
+                <div class="alert">
+                  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                  <% if (req.query.err == "MISSINGID") { %>
+                      You have not provided the Discord user ID.
+				    <% } else if (req.query.err == "CREATECOUPONINVALIDCHARACTERS") { %>
+					One of the characters you entered in coupon creation was invalid, please try again.
+				    <% } else if (req.query.err == "REVOKECOUPONCANNOTFINDCODE") { %>
+					One of the characters you entered in coupon revoke was invalid, please try again.
+				    <% } else if (req.query.err == "CREATECOUPONEMPTY") { %>
+					While creating your coupon you did not specify to give any resources or coins.
+				    <% } else if (req.query.err == "CREATECOUPONLESSTHANONE") { %>
+					While creating your coupon you tried to give less then one in RAM, DISK, CPU and/or coins.
+                  <% } else if (req.query.err == "INVALIDID") { %>
+                      You have provided a Discord user ID that does not exist, or has not signed up on the dashboard.
+                  <% } else if (req.query.err == "MISSINGVARIABLES") { %>
+                      You have not provided either ram, disk, cpu, and/or servers.
+                  <% } else if (req.query.err == "RAMSIZE" || req.query.err == "DISKSIZE" || req.query.err == "CPUSIZE" || req.query.err == "SERVERSIZE") { %>
+                      The RAM, disk, CPU and servers number cannot be less than 0 and must be above 999999999999999.
+                  <% } else { %>
+                      Stop admin abusing.
+                  <% } %>
+                </div>
+              <% } else if (req.query.err == "none") { %>
+                <div class="alert" style="background-color: #00d415;">
+                  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                  Success!
+                </div>
+              <% } %>
+            <% } %>
+				    <% if (req.query.code) { %>
+					<div class="alert" style="background-color: #00d415;">
+					You have created a coupon code with the name of: <%= req.query.code %>
+					</div>
+				    <% } %>
+            <div class="page-header">
+              <h3 class="page-title"> Admin </h3>
+            </div>
+            <div class="row">
+              <div class="col-md-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Heliactyl Version</h4>
+                    <form class="forms-sample">
+                      <div class="form-group">
+              <p id="latestversion"><span>Fetching...</span></p>
+                                    <script>
+                                        fetch("https://heliactyl.github.io/Heliactyl-11/")
+                                            .then(res => Promise.resolve(res.json()).then(ver => {
+                                                let currentver = "<%= settings.version.replace(/"/g, `\\\\"`) %>";
+                                                if (ver.version == currentver) {
+                                                    document.getElementById("latestversion").innerHTML = `<span>You are running Heliactyl version <code style="color: #009425" >${currentver}</code>. Heliactyl is up-to-date!</span>`;
+                                                } else if (ver.prerelease == currentver) {
+                                                    document.getElementById("latestversion").innerHTML = `<span>You are running Heliactyl version <code style="color: #009425">${currentver}</code>. Heliactyl is up-to-date!</span>`;
+                                                } else {
+                                                    document.getElementById("latestversion").innerHTML = `<span>Heliactyl is <b>not up-to-date!</b> The latest version is <codestyle="color: #009425" >${ver.version}</code> (or <codestyle="color: #009425" >${ver.prerelease}</code> for pre-releases) and you are currently running version <codestyle="color: #009425" ><%= settings.version %></code>.</span>`;
+                                                };
+                                            }));
+                                    </script>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Change user's package</h4>
+                    <form class="forms-sample">
+                      <div class="form-group">
+                        <label for="IDPlan">Discord User ID:</label>
+                        <input type="number" class="form-control" placeholder="Enter user ID" id="IDPlan">
+                      </div>
+                      <div class="form-group">
+                        <label for="InputPackage">Package:</label><BR>
+                        <select class="btn btn-secondary dropdown-toggle" style="background-color: #2a3038; border: 1px solid #2c2e33; color: #e4eaec;" id="package">
+                          <% for (let [name, value] of Object.entries(settings.api.client.packages.list)) { %>
+                            <option value="<%= name %>"><%= name %> (RAM: <%= value.ram %>MB, Disk: <%= value.disk %>MB, CPU: <%= value.cpu %>%, Servers: <%= value.servers %>)</option>
+                          <% } %>
+                        </select>
+                      </div>
+                      <a role="button" class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" href="javascript: submitPlan()">Apply Changes</a>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Set user's resources</h4>
+                    <form class="forms-sample">
+                      <div class="form-group">
+                        <label for="IDSet">Discord User ID:</label>
+                        <input type="number" class="form-control" placeholder="Enter user ID" id="IDSet">
+                      </div>
+                      <div class="form-group">
+                        <label for="SetCPU">CPU:</label><BR>
+                        <input type="number" class="form-control" placeholder="80" id="SetCPU">
+                      </div>
+                      <div class="form-group">
+                        <label for="SetRAM">RAM:</label><BR>
+                        <input type="number" class="form-control" placeholder="4096" id="SetRAM">
+                      </div>
+                      <div class="form-group">
+                        <label for="SetDisk">Disk:</label><BR>
+                        <input type="number" class="form-control" placeholder="81920" id="SetDisk">
+                      </div>
+                      <div class="form-group">
+                        <label for="SetServers">Servers:</label><BR>
+                        <input type="number" class="form-control" placeholder="0" id="SetServers">
+                      </div>
+                      <a role="button" class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" href="javascript: submitSet()">Apply Changes</a>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Add user's resources</h4>
+                    <form class="forms-sample">
+                      <div class="form-group">
+                        <label for="IDAdd">Discord User ID:</label>
+                        <input type="number" class="form-control" placeholder="Enter user ID" id="IDAdd">
+                      </div>
+                      <div class="form-group">
+                        <label for="AddCPU">CPU:</label><BR>
+                        <input type="number" class="form-control" placeholder="80" id="AddCPU">
+                      </div>
+                      <div class="form-group">
+                        <label for="AddRAM">RAM:</label><BR>
+                        <input type="number" class="form-control" placeholder="4096" id="AddRAM">
+                      </div>
+                      <div class="form-group">
+                        <label for="AddDisk">Disk:</label><BR>
+                        <input type="number" class="form-control" placeholder="81920" id="AddDisk">
+                      </div>
+                      <div class="form-group">
+                        <label for="AddServers">Servers:</label><BR>
+                        <input type="number" class="form-control" placeholder="0" id="AddServers">
+                      </div>
+                      <a role="button" class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" href="javascript: submitAdd()">Apply Changes</a>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Remove user's resources</h4>
+                    <form class="forms-sample">
+                      <div class="form-group">
+                        <label for="IDRemove">Discord User ID:</label>
+                        <input type="number" class="form-control" placeholder="Enter user ID" id="IDRemove">
+                      </div>
+                      <div class="form-group">
+                        <label for="RemoveCPU">CPU:</label><BR>
+                        <input type="number" class="form-control" placeholder="80" id="RemoveCPU">
+                      </div>
+                      <div class="form-group">
+                        <label for="RemoveRAM">RAM:</label><BR>
+                        <input type="number" class="form-control" placeholder="4096" id="RemoveRAM">
+                      </div>
+                      <div class="form-group">
+                        <label for="RemoveDisk">Disk:</label><BR>
+                        <input type="number" class="form-control" placeholder="81920" id="RemoveDisk">
+                      </div>
+                      <div class="form-group">
+                        <label for="RemoveServers">Servers:</label><BR>
+                        <input type="number" class="form-control" placeholder="0" id="RemoveServers">
+                      </div>
+                      <a role="button" class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" href="javascript: submitRemove()">Apply Changes</a>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Create coupon</h4>
+                                    <form action="/create_coupon">
+                                        <label for="code">Code:</label>
+                                        <input class="form-control" name="code" placeholder="Put nothing here to generate a random code"><br><br>
+                                        <label for="coins">Coins:</label>
+                                        <input class="form-control" name="coins" type="number"><br><br>
+                                        <label for="ram">RAM:</label>
+                                        <input class="form-control" name="ram" type="number"><br><br>
+                                        <label for="disk">Disk:</label>
+                                        <input class="form-control" name="disk" type="number"><br><br>
+                                        <label for="cpu">CPU:</label>
+                                        <input class="form-control" name="cpu" type="number"><br><br>
+                                        <label for="servers">Servers:</label>
+                                        <input class="form-control" name="servers" type="number"><br><br>
+                                        <button class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" type="submit">Complete</button>
+                                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Revoke coupon</h4>
+                                   <form action="/revoke_coupon">
+                                        <label for="code">Code:</label>
+                                        <input class="form-control" name="code"><br><br>
+                                        <button class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" type="submit">Complete</button>
+                                    </form>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Set user's coins</h4>
+                                    <form action="/setcoins">
+                                        <label for="id">Discord ID:</label>
+                                        <input class="form-control" name="id" placeholder="0000000000000000"><br><br>
+                                        <label for="coins">Coins:</label>
+                                        <input class="form-control" name="coins" type="number"><br><br>
+                                        <button class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" type="submit">Set</button>
+                                    </form>
+                  </div>
+                </div>
+              </div>
+            <div class="col-md-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Add user's coins</h4>
+                                    <form action="/addcoins">
+                                        <label for="id">Discord ID:</label>
+                                        <input class="form-control" name="id" placeholder="0000000000000000"><br><br>
+                                        <label for="coins">Coins:</label>
+                                        <input class="form-control" name="coins" type="number"><br><br>
+                                        <button class="badge badge-outline-green" style="padding: 12px 30px; font-size: 15px;" type="submit">Set</button>
+                                    </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+          <%- include('./components/footer') %>
+        </div>
+        <!-- main-panel ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <!-- Plugin js for this page -->
+    <script src="/assets/vendors/select2/select2.min.js"></script>
+    <script src="/assets/vendors/typeahead.js/typeahead.bundle.min.js"></script>
+    <script>
+        async function submitPlan() {
+            let id = encodeURIComponent(document.getElementById("IDPlan").value);
+            let packagename = encodeURIComponent(document.getElementById("package").value);
+            window.location.href = "/setplan?id=" + id + "&package=" + packagename
+        }
+        async function submitSet() {
+            let id = encodeURIComponent(document.getElementById("IDSet").value);
+            let cpu = encodeURIComponent(document.getElementById("SetCPU").value);
+            let ram = encodeURIComponent(document.getElementById("SetRAM").value);
+            let disk = encodeURIComponent(document.getElementById("SetDisk").value);
+            let servers = encodeURIComponent(document.getElementById("SetServers").value);
+            window.location.href = "/setresources?id=" + id + "&cpu=" + cpu + "&ram=" + ram + "&disk=" + disk + "&servers=" + servers
+        }
+        async function submitAdd() {
+            let id = encodeURIComponent(document.getElementById("IDAdd").value);
+            let cpu = encodeURIComponent(document.getElementById("AddCPU").value);
+            let ram = encodeURIComponent(document.getElementById("AddRAM").value);
+            let disk = encodeURIComponent(document.getElementById("AddDisk").value);
+            let servers = encodeURIComponent(document.getElementById("AddServers").value);
+            
+            window.location.href = "/addresources?id=" + id + "&cpu=" + cpu + "&ram=" + ram + "&disk=" + disk + "&servers=" + servers
+        }
+        async function submitRemove() {
+            let id = encodeURIComponent(document.getElementById("IDRemove").value);
+            let cpu = encodeURIComponent(document.getElementById("RemoveCPU").value);
+            let ram = encodeURIComponent(document.getElementById("RemoveRAM").value);
+            let disk = encodeURIComponent(document.getElementById("RemoveDisk").value);
+            let servers = encodeURIComponent(document.getElementById("RemoveServers").value);
+            window.location.href = "/removeresources?id=" + id + "&cpu=" + cpu + "&ram=" + ram + "&disk=" + disk + "&servers=" + servers
+        }
+    </script>
+    <!-- End plugin js for this page -->
+    <%- include('./components/scripts') %>
+    <!-- Custom js for this page -->
+    <script src="/assets/js/file-upload.js"></script>
+    <script src="/assets/js/typeahead.js"></script>
+    <script src="/assets/js/select2.js"></script>
+    <!-- End custom js for this page -->
+  </body>
+</html>

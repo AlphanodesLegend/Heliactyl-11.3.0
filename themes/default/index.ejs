@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('./components/head') %>
+  <body>
+    <div class="container-scroller">
+      <div class="container-fluid page-body-wrapper full-page-wrapper">
+        <div class="row w-100 m-0">
+          <div class="content-wrapper full-page-wrapper d-flex align-items-center auth login-bg">
+            <div class="card col-lg-4 mx-auto">
+              <div class="card-body px-5 py-5">
+                <form>
+                  <div class="text-center">
+                    <br>
+                    <center><h3>Welcome back!</h3>
+                    <br>
+                    <h5>What would you like to do?</h5></center>
+<br>
+                    <a role="button" class="btn btn-primary btn-rounded" href="<%= userinfo ? extra.home.buttontext.loggedin.link : extra.home.buttontext.loggedout.link %>"><%= userinfo ? extra.home.buttontext.loggedin.text : extra.home.buttontext.loggedout.text %></a>
+                    <br>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <!-- content-wrapper ends -->
+        </div>
+        <!-- row ends -->
+      </div>
+      <!-- page-body-wrapper ends -->
+    </div>
+    <!-- container-scroller -->
+    <%- include('./components/scripts') %>
+  </body>
+</html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Login to access the dashboard.">
+  <meta name="keywords" content="hosting, free hosting, mc, mc hosting, minecraft, srydencloud, sryden">
+  <meta name="author" content="Dashboard">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
