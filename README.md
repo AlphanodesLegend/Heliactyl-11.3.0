@@ -6,6 +6,7 @@
 # Heliactyl 11 • The best Pterodactyl client area
 Making a free or paid host and need a way for users to sign up, earn coins, manage servers? Try out Heliactyl.
 To get started, scroll down and follow the guide
+FULL CREDITS TO HELIACTYL TEAM
 
 All features:
 - Resource Management (gift, use it to create servers, etc)
